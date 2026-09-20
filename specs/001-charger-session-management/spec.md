@@ -79,19 +79,20 @@ When a test crashes, times out, disconnects, or otherwise fails to finish a char
 
 ---
 
-### User Story 5 - Manually Operate and Observe a Charger (Priority: P2)
+### User Story 5 - Manually Connect, Operate, and Observe a Charger (Priority: P2)
 
-An operator can select an available charger, establish or end its session, choose either connector, drive the supported charging states, submit meter values, and view current status and recent exchanged messages. Manual operation follows the same ownership and cleanup rules as automation.
+An operator enters ChargerLab connection settings, the manually pre-created ChargerLab `ChargerId`, and the charger's OCPP identity (`OcppId`) in the simulator UI and selects Connect. The simulator itself opens and owns the OCPP WebSocket connection; it does not call a ChargerLab management API or create chargers. Once connected, the operator chooses either connector, drives supported OCPP charging flows, submits meter values, and views current status and exchanged messages. Manual operation follows the same state validation and cleanup rules as automation.
 
 **Why this priority**: It makes exploratory troubleshooting possible without creating a second, divergent simulator behaviour.
 
-**Independent Test**: An operator uses the manual control surface to reserve a charger, complete a left-connector charging flow, observe its state, and release it for reuse.
+**Independent Test**: An operator supplies valid connection settings, connects one charger, completes a left-connector OCPP charging flow, observes the correlated exchanges, and disconnects it cleanly.
 
 **Acceptance Scenarios**:
 
-1. **Given** an available charger, **When** an operator reserves it, **Then** its current connection and each connector's state are visible to the operator.
-2. **Given** a manually reserved charger, **When** the operator sends a valid action to one connector, **Then** the action's success or failure and the resulting state are displayed.
-3. **Given** a charger reserved by automated testing, **When** an operator attempts to control it, **Then** the operator is prevented from changing it and can see that it is unavailable.
+1. **Given** the operator provides valid ChargerLab settings, a pre-created `ChargerId`, and `OcppId`, **When** the operator selects Connect, **Then** the simulator opens the configured OCPP WebSocket using `OcppId`, reports connection/registration readiness, and exposes each connector's state.
+2. **Given** a manually connected charger, **When** an operator drives a valid connector flow, **Then** the simulator sends the corresponding OCPP charger-originated messages and displays each correlated success or failure and resulting state.
+3. **Given** invalid, incomplete, or rejected connection settings, **When** the operator selects Connect, **Then** no connection is opened, secret values are not exposed, and the UI shows a diagnosable failure.
+4. **Given** a manual connection is active, **When** the operator selects Disconnect, **Then** the simulator performs bounded cleanup and reports the charger reusable or recovery-failed.
 
 ### Edge Cases
 
@@ -110,7 +111,7 @@ An operator can select an available charger, establish or end its session, choos
 ### Functional Requirements
 
 - **FR-001**: The system MUST manage one or more independently addressable simulated chargers and expose each charger's availability, ownership, connection state, and recovery status.
-- **FR-002**: The system MUST provide a session-management interface through which an automated test or manual operator can acquire, wait for, inspect, control, release, and recover a charger session.
+- **FR-002**: The system MUST provide a session-management API through which an automated test can acquire, wait for, inspect, control, release, and recover a charger session.
 - **FR-003**: The system MUST prevent simultaneous ownership of the same charger by different callers and report ownership conflicts without changing the charger's state.
 - **FR-004**: The system MUST keep an acquired charger's connection active while its session is healthy and owned, subject to explicit release, cancellation, remote disconnect, or lease expiry.
 - **FR-005**: The system MUST model two independently controllable connectors, named left and right, for every charger.
@@ -121,7 +122,8 @@ An operator can select an available charger, establish or end its session, choos
 - **FR-010**: The system MUST detect incomplete sessions caused by release, lease expiry, cancellation, disconnection, or process shutdown and initiate recovery automatically.
 - **FR-011**: Before reassigning a recovered charger, the system MUST verify it has no active ownership, outstanding transaction, scheduled meter activity, or live connection from the previous session.
 - **FR-012**: The system MUST place a charger in an unavailable recovery-failed state when it cannot be returned to a known-good state, rather than allowing a new caller to use uncertain state.
-- **FR-013**: The system MUST provide an operator-facing control and observation experience for manual use that applies the same session ownership, state validation, and recovery rules as automated use.
+- **FR-013**: The system MUST provide an operator-facing UI in which an operator supplies ChargerLab connection settings and explicitly connects or disconnects the simulator. The simulator MUST own the resulting OCPP WebSocket and manual OCPP flows; the manual UI MUST NOT call a ChargerLab management API.
+- **FR-013a**: The manual UI MUST require both `ChargerId`, identifying a charger manually created in ChargerLab, and `OcppId`, identifying that charger's OCPP connection identity. The simulator MUST use `OcppId` in the OCPP connection address, retain `ChargerId` as operational correlation metadata, and MUST NOT create or alter the ChargerLab charger record through an API.
 - **FR-014**: The system MUST retain a per-session operational history sufficient to determine the session owner, significant state changes, protocol action outcomes, recovery attempts, and failure reason.
 - **FR-015**: The system MUST allow authorized operational recovery of a charger in recovery-failed state and show whether that recovery succeeded before the charger is made available.
 - **FR-016**: The system MUST establish each charger connection as an OCPP 1.6 JSON charge-point connection, using the charger's unique identity in the connection address and negotiating the `ocpp1.6` protocol version.
@@ -144,16 +146,16 @@ An operator can select an available charger, establish or end its session, choos
 
 - **OCPP Actions**: The first delivery scope is charger-to-system `BootNotification`, `Heartbeat`, `StatusNotification`, `Authorize`, `StartTransaction`, `MeterValues`, and `StopTransaction`, plus the system-to-charger `RemoteStartTransaction` flow defined in FR-029. `RemoteStopTransaction`, `ChangeAvailability`, `Reset`, and `TriggerMessage` are deferred; when received before support is added, they MUST receive the protocol-defined unsupported outcome. Smart charging, reservations, local authorization lists, diagnostics, firmware management, and all other actions are outside this feature.
 - **State Transitions**: Managed-session states are available, reserved, connecting, ready, recovering, recovery-failed, and stopped. The left and right connectors are independently identified as 1 and 2 and use the OCPP statuses in FR-021; connector 0 represents the charger as a whole where applicable. A normal transaction flow is available to preparing, authorization, start, charging, optional suspension, stop, finishing, and available. Only documented actions may advance a state; invalid transitions are rejected with no state change.
-- **Configuration**: Operators MUST be able to supply the central-system endpoint, charger identities, number of available chargers, connection and recovery limits, session-lease limits, heartbeat and retry settings, meter-reporting schedule, and manual-control availability. Credentials, endpoint values, and environment-specific transport settings are externally supplied and not stored in source control.
+- **Configuration**: The manual UI MUST accept `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, and `OcppId`, together with connection/recovery limits, heartbeat/retry settings, and meter schedule. `ChargerId` refers to a charger manually created in ChargerLab; `OcppId` is used in the WebSocket connection address. The simulator MUST validate settings before connection; it may use the key and company ID only for the configured WebSocket authentication/connection convention, MUST NOT invoke a ChargerLab management API, and MUST NOT persist or expose secrets. Automation pool/lease configuration remains externally supplied and is not stored in source control.
 - **Background Lifecycle**: The service MUST report readiness only after it can accept and manage sessions, complete required initial protocol activity, and begin connection-health monitoring. On cancellation or shutdown it MUST stop new acquisitions, cancel outstanding work, end scheduled meter reporting, close connections, and report completion or remaining recovery work within a bounded period.
 - **Failure and Recovery**: Disconnects, timeouts, remote errors, malformed messages, duplicates, ownership loss, unrecognized charger identities, protocol-version disagreement, and half-open connections MUST be visible to the caller and recorded. Recovery MUST attempt a valid transaction stop and cleanup sequence first, then isolate the charger if that sequence fails; an isolated charger MUST not be reassigned until known-good recovery succeeds.
-- **Automation Outcome**: An automated test MUST be able to reserve a specific or available charger, wait for a ready or failed outcome, command and inspect either connector deterministically, obtain exchanged-message and state history for that session, and release the charger with a completion outcome.
+- **Automation Outcome**: An automated test MUST be able to reserve a specific or available charger through the session-management API, wait for a ready or failed outcome, command and inspect either connector deterministically, obtain exchanged-message and state history for that session, and release the charger with a completion outcome. Manual operation MUST instead begin with an operator-initiated OCPP WebSocket connection and use the simulator's OCPP flows.
 
 ### Key Entities *(include if feature involves data)*
 
 - **Charger**: A unique simulated physical charger with connection, availability, ownership, recovery, and two connector states.
 - **Connector**: The left or right charging port of a charger, with independent state, current transaction, and meter-value history.
-- **Managed Session**: A time-bounded exclusive reservation of one charger by an automated test or operator, including lifecycle status, owner reference, and operational history.
+- **Managed Session**: A time-bounded exclusive reservation of one charger by an automated test, including lifecycle status, owner reference, and operational history.
 - **Transaction**: A charging lifecycle associated with one connector, including authorization outcome, transaction identifier, start/stop status, and meter values.
 - **Recovery Record**: The evidence and outcome of cleanup after an incomplete or failed session, including why recovery began and whether the charger became reusable.
 - **Protocol Exchange**: A correlated OCPP request and its result or error, including charger identity, message identifier, action, direction, and outcome.
@@ -167,14 +169,14 @@ An operator can select an available charger, establish or end its session, choos
 - **SC-003**: At least 10 distinct charger sessions can be controlled concurrently, with each caller able to retrieve only its own session's state and history.
 - **SC-004**: After an abandoned active session, the charger reaches either reusable or clearly recovery-failed status within 60 seconds, avoiding the one-hour natural blocking period.
 - **SC-005**: In end-to-end test runs covering successful, rejected, timed-out, disconnected, and abandoned flows, 100% of session endings produce an observable completion, failure, or recovery outcome.
-- **SC-006**: A trained operator can reserve a charger, complete a basic single-connector charging flow, inspect the result, and release the charger in under 5 minutes without direct protocol-message editing.
+- **SC-006**: A trained operator can enter valid ChargerLab settings, a manually created `ChargerId`, and `OcppId`; connect a charger; complete a basic single-connector OCPP charging flow; inspect the result; and disconnect it for reuse in under 5 minutes without direct protocol-message editing or a ChargerLab management API call.
 - **SC-007**: Across 100 consecutive core-flow runs, every exchanged OCPP request has exactly one correlated result or error, and no charger issues more than one unresolved outgoing request at a time.
 - **SC-008**: Across 100 consecutive reconnect and recovery runs, no unchanged reconnect produces an extra registration notification, and each failed connection reaches either ready or a recorded failure within the configured acquisition limit.
 
 ## Assumptions
 
 - A single simulator deployment manages a configurable pool of isolated charger identities; it is not split into separate automation and manual simulator applications.
-- The manual operator experience is a thin control and observation layer over the same session-management rules used by automated tests; detailed visual design is deferred to planning.
+- The manual operator experience is a thin control and observation layer over the simulator's OCPP runtime. The Connect button supplies a transient ChargerLab connection profile, including manually created `ChargerId` and its `OcppId`, and opens the OCPP WebSocket; it does not create or manage a ChargerLab session or charger through a management API. Detailed visual design is deferred to planning.
 - The baseline protocol scope is OCPP 1.6 JSON over WebSocket, consistent with the project constitution and existing integration target.
 - The supplied OCPP 1.6-J specification, April 2025 errata sheet, and included JSON schemas are the baseline protocol reference for this feature.
 - Left and right are stable human-facing names for OCPP connector identifiers 1 and 2 respectively; connector 0 represents the charge point where OCPP requires a charger-level status.
