@@ -10,9 +10,9 @@
 
 ### Decision: Manual Connect creates a simulator-owned OCPP connection from a transient UI profile
 
-**Rationale**: The manual UI collects `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, and the identifiers of a manually pre-created ChargerLab charger: `ChargerId` for operational correlation and `OcppId` for the WebSocket connection address. It validates them and asks the simulator runtime to connect. The runtime—not the browser—uses the profile for the configured WebSocket authentication convention, retains secrets only in memory for the connection lifetime, and sends all manual charging actions as native charger-originated OCPP calls. No ChargerLab management API is invoked.
+**Rationale**: The manual UI collects `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, and the identifiers of a manually pre-created ChargeLab charger: `ChargerId` for operational correlation and `OcppId` for the WebSocket connection address. It validates them and asks the simulator runtime to connect. The runtime—not the browser—uses the profile for the configured WebSocket authentication convention, retains secrets only in memory for the connection lifetime, and sends all manual charging actions as native charger-originated OCPP calls. No ChargeLab management API is invoked.
 
-**Alternatives considered**: Calling a ChargerLab API from the UI would make manual use dependent on a separate management workflow; allowing the browser to own the socket would bypass simulator state, correlation, and cleanup.
+**Alternatives considered**: Calling a ChargeLab API from the UI would make manual use dependent on a separate management workflow; allowing the browser to own the socket would bypass simulator state, correlation, and cleanup.
 
 ### Decision: Retain bounded, redacted operational history in memory per session
 
@@ -70,6 +70,6 @@
 
 ### Decision: Inject TimeProvider, scheduler/delay, ID generator, transport factory, and schema validator
 
-**Rationale**: Tests advance lease/retry/heartbeat/meter/recovery time immediately, select IDs, script frames/disconnects, and qualify schema behavior against supplied fixtures and errata without a live ChargerLab endpoint.
+**Rationale**: Tests advance lease/retry/heartbeat/meter/recovery time immediately, select IDs, script frames/disconnects, and qualify schema behavior against supplied fixtures and errata without a live ChargeLab endpoint.
 
 **Alternatives considered**: Wall-clock APIs/real sockets create slow, flaky tests; bespoke global time/ID utilities hide dependencies.

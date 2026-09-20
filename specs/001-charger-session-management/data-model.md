@@ -16,7 +16,7 @@ Charger-level transitions: `Available → Reserved → Connecting → Ready`; `R
 
 ## Manual Connection Profile
 
-The UI submits a transient `ManualConnectionProfile` containing `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, `OcppId`, and validated transport/runtime values. `ChargerId` identifies the charger manually created in ChargerLab and is retained only as operational correlation metadata; `OcppId` is the unique charge-point identity used in the OCPP WebSocket address. Both are required and non-empty. `ChargeLabApiKey` is a secret: it is redacted from logs/history, never returned by read endpoints, never persisted, and cleared when Connect fails or Disconnect/recovery completes. The profile is used only by the simulator-owned OCPP transport; it is not an instruction to call a ChargerLab management API or create a charger.
+The UI submits a transient `ManualConnectionProfile` containing `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, `OcppId`, and validated transport/runtime values. `ChargerId` identifies the charger manually created in ChargeLab and is retained only as operational correlation metadata; `OcppId` is the unique charge-point identity used in the OCPP WebSocket address. Both are required and non-empty. `ChargeLabApiKey` is a secret: it is redacted from logs/history, never returned by read endpoints, never persisted, and cleared when Connect fails or Disconnect/recovery completes. The profile is used only by the simulator-owned OCPP transport; it is not an instruction to call a ChargeLab management API or create a charger.
 
 ## Managed Session / SessionLease
 

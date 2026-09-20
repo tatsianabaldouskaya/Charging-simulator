@@ -40,7 +40,7 @@ the primary consumer is test automation, not an interactive operator.
 
 ### IV. Testable Boundaries and Deterministic Time
 Production code MUST separate protocol models, message generation/parsing, state
-orchestration, WebSocket transport, configuration, and external ChargerLab integration
+orchestration, WebSocket transport, configuration, and external ChargeLab integration
 behind focused interfaces. Tests MUST cover state transitions, OCPP serialization and
 correlation, error paths, and end-to-end WebSocket exchanges. Clocks, delays, IDs, and
 transport dependencies MUST be injectable or otherwise controllable in tests. Rationale:
@@ -57,7 +57,7 @@ Rationale: clean boundaries and diagnostics make asynchronous protocol failures 
 
 ## Protocol and Runtime Constraints
 
-- The simulator MUST connect to ChargerLab using supplied, environment-specific settings;
+- The simulator MUST connect to ChargeLab using supplied, environment-specific settings;
   endpoint URLs, credentials, charge-point identity, and TLS settings MUST be externalized
   configuration.
 - The supported baseline is OCPP 1.6 JSON over WebSocket. Any additional protocol version,

@@ -1,6 +1,6 @@
 # Session Control API Contract
 
-Direct management controls are REST/JSON for automation, not inbound OCPP commands. The manual UI does not use these endpoints to create a ChargerLab session or invoke a ChargerLab management API. All automation session resources require `X-Session-Lease: <leaseToken>` unless noted; operator recovery uses the deployment's separate operator authorization policy. Failures are RFC 9457 ProblemDetails with stable reason codes.
+Direct management controls are REST/JSON for automation, not inbound OCPP commands. The manual UI does not use these endpoints to create a ChargeLab session or invoke a ChargeLab management API. All automation session resources require `X-Session-Lease: <leaseToken>` unless noted; operator recovery uses the deployment's separate operator authorization policy. Failures are RFC 9457 ProblemDetails with stable reason codes.
 
 | Operation | Request / outcome |
 |---|---|
@@ -21,4 +21,4 @@ An eligible incoming `RemoteStartTransaction` is received only on the OCPP contr
 
 ## Manual UI boundary
 
-The manual UI submits a transient connection profile with the following fields: `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, and `OcppId`. `ChargerId` identifies a charger manually created in ChargerLab; `OcppId` is its charge-point identity and is used in the WebSocket address. Selecting Connect requires both IDs, validates the profile, and asks the simulator to open its own OCPP WebSocket. The UI can then request supported charger-originated OCPP flows and display the simulator's correlated results/state/history. It cannot create or alter the ChargerLab charger, call a ChargerLab management API, own the WebSocket, or read back the API key. Disconnect delegates to the simulator's bounded cleanup/recovery workflow.
+The manual UI submits a transient connection profile with the following fields: `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, and `OcppId`. `ChargerId` identifies a charger manually created in ChargeLab; `OcppId` is its charge-point identity and is used in the WebSocket address. Selecting Connect requires both IDs, validates the profile, and asks the simulator to open its own OCPP WebSocket. The UI can then request supported charger-originated OCPP flows and display the simulator's correlated results/state/history. It cannot create or alter the ChargeLab charger, call a ChargeLab management API, own the WebSocket, or read back the API key. Disconnect delegates to the simulator's bounded cleanup/recovery workflow.

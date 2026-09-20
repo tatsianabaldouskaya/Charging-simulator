@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - .NET 10 SDK.
-- For automation, deployment configuration supplying ChargerLab WebSocket endpoint, credentials/TLS values, at least two unique charger identities, and secrets outside source control. For manual use, create the charger first in ChargerLab, then enter a transient profile with `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, and `OcppId`.
+- For automation, deployment configuration supplying ChargeLab WebSocket endpoint, credentials/TLS values, at least two unique charger identities, and secrets outside source control. For manual use, create the charger first in ChargeLab, then enter a transient profile with `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, `ChargerId`, and `OcppId`.
 - Supplied OCPP 1.6-J schemas/errata fixtures available to the test project.
 
 ## Validate locally
@@ -16,7 +16,7 @@
 
    Expected: domain transition tests, OCPP frame/schema/correlation contract tests, and scripted-WebSocket integration tests pass without a live central system.
 
-2. Start the service with development configuration that points to a scripted local central system (or configured ChargerLab):
+2. Start the service with development configuration that points to a scripted local central system (or configured ChargeLab):
 
    ```sh
    dotnet run --project src/ChargingSimulator.Host
@@ -32,4 +32,4 @@
 
 7. Force a disconnect or invalid/malformed/unmatched frame. Expected: history provides diagnosable evidence; the other connector and other chargers remain usable; no uncertain start/stop is automatically replayed.
 
-8. Create the charger manually in ChargerLab. In the manual UI, enter valid `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, its `ChargerId`, and its `OcppId`, then select Connect. Expected: the simulator validates that both IDs are present, uses `OcppId` in the OCPP WebSocket address, keeps `ChargerId` for correlation, never exposes the key, and does not create/change the ChargerLab charger or call a ChargerLab management API. Drive a left-connector OCPP flow and select Disconnect. Expected: correlated OCPP outcomes and state are visible; the simulator performs bounded cleanup before reporting reusable or recovery-failed.
+8. Create the charger manually in ChargeLab. In the manual UI, enter valid `ChargeLabUrl`, `ChargeLabWss`, `ChargeLabApiKey`, `ChargeLabCompanyId`, its `ChargerId`, and its `OcppId`, then select Connect. Expected: the simulator validates that both IDs are present, uses `OcppId` in the OCPP WebSocket address, keeps `ChargerId` for correlation, never exposes the key, and does not create/change the ChargeLab charger or call a ChargeLab management API. Drive a left-connector OCPP flow and select Disconnect. Expected: correlated OCPP outcomes and state are visible; the simulator performs bounded cleanup before reporting reusable or recovery-failed.

@@ -38,16 +38,21 @@ description: "Implementation tasks for charger session management"
 - [ ] T011 [P] Define typed OCPP-J CALL/CALLRESULT/CALLERROR envelopes, parse results, protocol errors, and action constants in `src/ChargingSimulator.Ocpp/Protocol/OcppFrames.cs`
 - [ ] T012 [P] Define OCPP schema-validator, per-charger runtime, transport connection/factory, and session-store interfaces in `src/ChargingSimulator.Application/Abstractions/SimulatorInterfaces.cs`
 - [ ] T013 [P] Define validated pool, connection, retry, heartbeat, lease, recovery, meter, and manual-profile options (including secret redaction) in `src/ChargingSimulator.Host/Configuration/SimulatorOptions.cs`
-- [ ] T014 [P] Implement JSON OCPP-J envelope parsing/serialization and invalid-frame classification in `src/ChargingSimulator.Ocpp/Protocol/OcppFrameCodec.cs`
-- [ ] T015 [P] Implement supplied-schema fixture loading and an isolated schema-validation adapter with errata handling in `src/ChargingSimulator.Ocpp/Validation/OcppSchemaValidator.cs`
-- [ ] T016 [P] Implement a `ClientWebSocket` OCPP 1.6 transport that negotiates `ocpp1.6`, builds the identity address, and supports cancellable send/receive/close in `src/ChargingSimulator.Transport/ClientWebSocketOcppTransport.cs`
-- [ ] T017 [P] Implement structured logging scopes and redaction for charger, session, OCPP message/action, transaction, transition, and failure fields in `src/ChargingSimulator.Host/Observability/SimulatorLogging.cs`
-- [ ] T018 Implement the single-receive-pump, send mutex, one-unresolved-outgoing-CALL gate, exact-ID dispatcher, and unmatched-frame history recording in `src/ChargingSimulator.Ocpp/Runtime/OcppMessageRouter.cs`
-- [ ] T019 Implement the per-charger actor mailbox, cancellation ownership, and safe shutdown boundary in `src/ChargingSimulator.Application/Runtime/ChargerActor.cs`
-- [ ] T020 Implement host dependency injection, options startup validation, ProblemDetails middleware, health endpoint, and graceful hosted-service shutdown in `src/ChargingSimulator.Host/Program.cs`
-- [ ] T021 [P] Add domain transition and reusable-state invariant tests in `tests/ChargingSimulator.Domain.Tests/Transitions/ChargerAndConnectorStateMachineTests.cs`
-- [ ] T022 [P] Add frame codec, errata/schema fixture, malformed/duplicate/unmatched, exact-correlation, and one-outstanding-CALL contract tests in `tests/ChargingSimulator.Ocpp.Tests/Protocol/OcppProtocolContractTests.cs`
-- [ ] T023 [P] Create controllable time/ID/scheduler and scripted central-system WebSocket test doubles in `tests/ChargingSimulator.IntegrationTests/Support/DeterministicRuntime.cs` and `tests/ChargingSimulator.IntegrationTests/Support/ScriptedOcppCentralSystem.cs`
+### Test-First Contracts and Test Support
+
+- [ ] T014 [P] Add domain transition and reusable-state invariant tests in `tests/ChargingSimulator.Domain.Tests/Transitions/ChargerAndConnectorStateMachineTests.cs`
+- [ ] T015 [P] Add frame codec, errata/schema fixture, malformed/duplicate/unmatched, exact-correlation, and one-outstanding-CALL contract tests in `tests/ChargingSimulator.Ocpp.Tests/Protocol/OcppProtocolContractTests.cs`
+- [ ] T016 [P] Create controllable time/ID/scheduler and scripted central-system WebSocket test doubles, including WebSocket subprotocol/send/receive/close assertions, in `tests/ChargingSimulator.IntegrationTests/Support/DeterministicRuntime.cs` and `tests/ChargingSimulator.IntegrationTests/Support/ScriptedOcppCentralSystem.cs`
+
+### Foundational Implementation
+
+- [ ] T017 [P] Implement JSON OCPP-J envelope parsing/serialization and invalid-frame classification in `src/ChargingSimulator.Ocpp/Protocol/OcppFrameCodec.cs`
+- [ ] T018 [P] Implement supplied-schema fixture loading and an isolated schema-validation adapter with errata handling in `src/ChargingSimulator.Ocpp/Validation/OcppSchemaValidator.cs`
+- [ ] T019 [P] Implement a `ClientWebSocket` OCPP 1.6 transport that negotiates `ocpp1.6`, builds the identity address, and supports cancellable send/receive/close in `src/ChargingSimulator.Transport/ClientWebSocketOcppTransport.cs`
+- [ ] T020 [P] Implement structured logging scopes and redaction for charger, session, OCPP message/action, transaction, transition, and failure fields in `src/ChargingSimulator.Host/Observability/SimulatorLogging.cs`
+- [ ] T021 Implement the single-receive-pump, send mutex, one-unresolved-outgoing-CALL gate, exact-ID dispatcher, and unmatched-frame history recording in `src/ChargingSimulator.Ocpp/Runtime/OcppMessageRouter.cs`
+- [ ] T022 Implement the per-charger actor mailbox, cancellation ownership, and safe shutdown boundary in `src/ChargingSimulator.Application/Runtime/ChargerActor.cs`
+- [ ] T023 Implement host dependency injection, options startup validation, ProblemDetails middleware, health endpoint, and graceful hosted-service shutdown in `src/ChargingSimulator.Host/Program.cs`
 
 **Checkpoint**: A configured host starts safely; protocol/state boundaries and deterministic test fixtures are available for all stories.
 
@@ -148,9 +153,9 @@ description: "Implementation tasks for charger session management"
 
 ## Phase 7: User Story 5 - Manually Connect, Operate, and Observe a Charger (Priority: P2)
 
-**Goal**: Let an operator use a transient validated ChargerLab profile to make the simulator own a manual OCPP connection, drive flows, view results, and disconnect safely.
+**Goal**: Let an operator use a transient validated ChargeLab profile to make the simulator own a manual OCPP connection, drive flows, view results, and disconnect safely.
 
-**Independent Test**: Submit valid manual settings with pre-created `ChargerId` and `OcppId`, connect using the latter in the WebSocket address, run a left flow, inspect redacted correlated history, disconnect, and verify no ChargerLab management API request occurred.
+**Independent Test**: Submit valid manual settings with pre-created `ChargerId` and `OcppId`, connect using the latter in the WebSocket address, run a left flow, inspect redacted correlated history, disconnect, and verify no ChargeLab management API request occurred.
 
 ### Tests for User Story 5
 
@@ -166,7 +171,7 @@ description: "Implementation tasks for charger session management"
 - [ ] T059 [US5] Implement the thin operator dashboard profile form, connector action controls, correlated exchange history, and reusable/recovery-failed display in `src/ChargingSimulator.Host/wwwroot/index.html` and `src/ChargingSimulator.Host/wwwroot/app.js`
 - [ ] T060 [US5] Add manual UI styling that makes connection/recovery state and left/right connector state distinguishable in `src/ChargingSimulator.Host/wwwroot/site.css`
 
-**Checkpoint**: An operator can make and safely close a simulator-owned OCPP connection using a transient profile, without API-secret exposure or ChargerLab management calls.
+**Checkpoint**: An operator can make and safely close a simulator-owned OCPP connection using a transient profile, without API-secret exposure or ChargeLab management calls.
 
 ---
 
@@ -208,7 +213,7 @@ Setup → Foundation → US1 (MVP) → US2 → US4 → US5
 
 ### Parallel Opportunities
 
-- T003–T006 and T007–T017 can be split by project/file boundary; T018–T020 integrate their results.
+- T003–T006 and T007–T016 can be split by project/file boundary; T017–T023 integrate their verified contracts.
 - In US1, T024–T026 and T027–T028 can run in parallel before the coordinating tasks.
 - In US2, T034–T035 run in parallel; in US3, T040–T041 run in parallel; in US4, T045–T047 run in parallel; in US5, T053–T055 run in parallel.
 - After US1, US2 and US3 can be delivered by separate developers; US5 can start once the shared OCPP runtime and recovery contract are stable.
