@@ -31,4 +31,4 @@
 
 ## Notes
 
-- Validation iteration 2 passed. The protocol and state requirements now distinguish managed-session ownership from externally visible OCPP status, define the core OCPP-J flow and explicit scope boundaries, and incorporate the applicable 2025 errata without prescribing an implementation technology.
+- Validation iteration 3 passed. The protocol and state requirements distinguish managed-session ownership from externally visible OCPP status, define the core OCPP-J flow and explicit scope boundaries, and incorporate the applicable 2025 errata without prescribing an implementation technology. Cross-checking the comparable simulator artifacts added single-owner inbound message routing, retained diagnostics for unmatched messages, the correlated `RemoteStartTransaction` path, and the rule not to replay an indeterminate lifecycle request.
