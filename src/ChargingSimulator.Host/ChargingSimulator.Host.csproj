@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="../ChargingSimulator.Application/ChargingSimulator.Application.csproj" />
+    <ProjectReference Include="../ChargingSimulator.Transport/ChargingSimulator.Transport.csproj" />
+  </ItemGroup>
+</Project>

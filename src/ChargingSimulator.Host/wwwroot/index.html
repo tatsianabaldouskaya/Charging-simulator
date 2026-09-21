@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Charging Simulator</title><link rel="stylesheet" href="site.css"></head>
+<body><main>
+<h1>Charging Simulator</h1><p>Connect this simulator to an OCPP 1.6 central system. The OCPP ID is used as the charger identity.</p>
+<form id="profile"><label>OCPP WebSocket URL<input name="chargeLabWss" type="url" required placeholder="wss://…"></label><label>OCPP ID<input name="ocppId" required placeholder="ocpp-001"></label><label>Company ID<input name="chargeLabCompanyId" required></label><button type="submit">Connect simulator</button><button id="disconnect" type="button" disabled>Disconnect</button></form>
+<section id="controls" hidden><h2>Charger controls</h2><label>Connector <select id="connector"><option value="left">Left</option><option value="right">Right</option></select></label><label>ID tag<input id="id-tag" value="manual-user"></label><label>Meter value (Wh)<input id="meter-value" type="number" value="0" min="0" step="1"></label><div class="actions"><button data-action="Prepare">Prepare</button><button data-action="Authorize">Authorize</button><button data-action="StartTransaction">Start charging</button><button data-action="ReportMeterValues">Send meter value</button><button data-action="SuspendEv">Suspend EV</button><button data-action="SuspendEvse">Suspend EVSE</button><button data-action="Resume">Resume</button><button data-action="StopTransaction">Stop charging</button></div></section>
+<section><h2>Session status</h2><button id="refresh" type="button" disabled>Refresh session</button><pre id="output" aria-live="polite">Not connected.</pre></section>
+</main><script src="app.js"></script></body></html>

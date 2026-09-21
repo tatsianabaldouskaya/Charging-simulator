@@ -16,12 +16,12 @@ description: "Implementation tasks for charger session management"
 
 **Purpose**: Create the .NET 10 solution and the project boundaries in the implementation plan.
 
-- [ ] T001 Create `ChargingSimulator.sln` and add the Host, Application, Domain, Ocpp, Transport, and test projects at the repository root in `ChargingSimulator.sln`
-- [ ] T002 Create .NET 10 nullable-enabled class-library and test project files in `src/ChargingSimulator.Domain/ChargingSimulator.Domain.csproj`, `src/ChargingSimulator.Application/ChargingSimulator.Application.csproj`, `src/ChargingSimulator.Ocpp/ChargingSimulator.Ocpp.csproj`, `src/ChargingSimulator.Transport/ChargingSimulator.Transport.csproj`, `src/ChargingSimulator.Host/ChargingSimulator.Host.csproj`, `tests/ChargingSimulator.Domain.Tests/ChargingSimulator.Domain.Tests.csproj`, `tests/ChargingSimulator.Ocpp.Tests/ChargingSimulator.Ocpp.Tests.csproj`, and `tests/ChargingSimulator.IntegrationTests/ChargingSimulator.IntegrationTests.csproj`
-- [ ] T003 [P] Configure package versions, project references, xUnit test SDK dependencies, analyzers, warnings-as-errors, and `net10.0` properties in `Directory.Build.props` and `Directory.Packages.props`
-- [ ] T004 [P] Add development-safe configuration defaults and documented environment-variable names in `src/ChargingSimulator.Host/appsettings.json` and `src/ChargingSimulator.Host/appsettings.Development.json`
-- [ ] T005 [P] Add supplied OCPP schema and errata fixtures as versioned test content under `tests/ChargingSimulator.Ocpp.Tests/Fixtures/Ocpp16/`
-- [ ] T006 [P] Add a solution-level test command and format verification configuration in `.editorconfig` and `README.md`
+- [X] T001 Create `ChargingSimulator.sln` and add the Host, Application, Domain, Ocpp, Transport, and test projects at the repository root in `ChargingSimulator.sln`
+- [X] T002 Create .NET 10 nullable-enabled class-library and test project files in `src/ChargingSimulator.Domain/ChargingSimulator.Domain.csproj`, `src/ChargingSimulator.Application/ChargingSimulator.Application.csproj`, `src/ChargingSimulator.Ocpp/ChargingSimulator.Ocpp.csproj`, `src/ChargingSimulator.Transport/ChargingSimulator.Transport.csproj`, `src/ChargingSimulator.Host/ChargingSimulator.Host.csproj`, `tests/ChargingSimulator.Domain.Tests/ChargingSimulator.Domain.Tests.csproj`, `tests/ChargingSimulator.Ocpp.Tests/ChargingSimulator.Ocpp.Tests.csproj`, and `tests/ChargingSimulator.IntegrationTests/ChargingSimulator.IntegrationTests.csproj`
+- [X] T003 [P] Configure package versions, project references, xUnit test SDK dependencies, analyzers, warnings-as-errors, and `net10.0` properties in `Directory.Build.props` and `Directory.Packages.props`
+- [X] T004 [P] Add development-safe configuration defaults and documented environment-variable names in `src/ChargingSimulator.Host/appsettings.json` and `src/ChargingSimulator.Host/appsettings.Development.json`
+- [X] T005 [P] Add supplied OCPP schema and errata fixtures as versioned test content under `tests/ChargingSimulator.Ocpp.Tests/Fixtures/Ocpp16/`
+- [X] T006 [P] Add a solution-level test command and format verification configuration in `.editorconfig` and `README.md`
 
 ---
 
@@ -31,22 +31,22 @@ description: "Implementation tasks for charger session management"
 
 **⚠️ CRITICAL**: Complete this phase before implementing user stories.
 
-- [ ] T007 [P] Define managed charger/session states, connector identities/statuses, transaction/meter/recovery/history records, and stable failure reasons in `src/ChargingSimulator.Domain/Models/ChargerModels.cs`
+- [X] T007 [P] Define managed charger/session states, connector identities/statuses, transaction/meter/recovery/history records, and stable failure reasons in `src/ChargingSimulator.Domain/Models/ChargerModels.cs`
 - [ ] T008 [P] Define pure connector transition validation and resulting transition evidence in `src/ChargingSimulator.Domain/Transitions/ConnectorStateMachine.cs`
 - [ ] T009 [P] Define charger lifecycle transition validation, reusable-state invariant checks, and recovery admission rules in `src/ChargingSimulator.Domain/Transitions/ChargerStateMachine.cs`
-- [ ] T010 [P] Define injectable clock, delay/scheduler, identifier generator, and bounded-history abstractions in `src/ChargingSimulator.Application/Abstractions/RuntimeAbstractions.cs`
-- [ ] T011 [P] Define typed OCPP-J CALL/CALLRESULT/CALLERROR envelopes, parse results, protocol errors, and action constants in `src/ChargingSimulator.Ocpp/Protocol/OcppFrames.cs`
-- [ ] T012 [P] Define OCPP schema-validator, per-charger runtime, transport connection/factory, and session-store interfaces in `src/ChargingSimulator.Application/Abstractions/SimulatorInterfaces.cs`
+- [X] T010 [P] Define injectable clock, delay/scheduler, identifier generator, and bounded-history abstractions in `src/ChargingSimulator.Application/Abstractions/RuntimeAbstractions.cs`
+- [X] T011 [P] Define typed OCPP-J CALL/CALLRESULT/CALLERROR envelopes, parse results, protocol errors, and action constants in `src/ChargingSimulator.Ocpp/Protocol/OcppFrames.cs`
+- [X] T012 [P] Define OCPP schema-validator, per-charger runtime, transport connection/factory, and session-store interfaces in `src/ChargingSimulator.Application/Abstractions/SimulatorInterfaces.cs`
 - [ ] T013 [P] Define validated pool, connection, retry, heartbeat, lease, recovery, meter, and manual-profile options (including secret redaction) in `src/ChargingSimulator.Host/Configuration/SimulatorOptions.cs`
 ### Test-First Contracts and Test Support
 
-- [ ] T014 [P] Add domain transition and reusable-state invariant tests in `tests/ChargingSimulator.Domain.Tests/Transitions/ChargerAndConnectorStateMachineTests.cs`
+- [X] T014 [P] Add domain transition and reusable-state invariant tests in `tests/ChargingSimulator.Domain.Tests/Transitions/ChargerAndConnectorStateMachineTests.cs`
 - [ ] T015 [P] Add frame codec, errata/schema fixture, malformed/duplicate/unmatched, exact-correlation, and one-outstanding-CALL contract tests in `tests/ChargingSimulator.Ocpp.Tests/Protocol/OcppProtocolContractTests.cs`
 - [ ] T016 [P] Create controllable time/ID/scheduler and scripted central-system WebSocket test doubles, including WebSocket subprotocol/send/receive/close assertions, in `tests/ChargingSimulator.IntegrationTests/Support/DeterministicRuntime.cs` and `tests/ChargingSimulator.IntegrationTests/Support/ScriptedOcppCentralSystem.cs`
 
 ### Foundational Implementation
 
-- [ ] T017 [P] Implement JSON OCPP-J envelope parsing/serialization and invalid-frame classification in `src/ChargingSimulator.Ocpp/Protocol/OcppFrameCodec.cs`
+- [X] T017 [P] Implement JSON OCPP-J envelope parsing/serialization and invalid-frame classification in `src/ChargingSimulator.Ocpp/Protocol/OcppFrameCodec.cs`
 - [ ] T018 [P] Implement supplied-schema fixture loading and an isolated schema-validation adapter with errata handling in `src/ChargingSimulator.Ocpp/Validation/OcppSchemaValidator.cs`
 - [ ] T019 [P] Implement a `ClientWebSocket` OCPP 1.6 transport that negotiates `ocpp1.6`, builds the identity address, and supports cancellable send/receive/close in `src/ChargingSimulator.Transport/ClientWebSocketOcppTransport.cs`
 - [ ] T020 [P] Implement structured logging scopes and redaction for charger, session, OCPP message/action, transaction, transition, and failure fields in `src/ChargingSimulator.Host/Observability/SimulatorLogging.cs`
@@ -72,7 +72,7 @@ description: "Implementation tasks for charger session management"
 
 ### Implementation for User Story 1
 
-- [ ] T027 [P] [US1] Implement bounded per-session operational history with sequence filtering and token/secret redaction in `src/ChargingSimulator.Application/History/SessionHistory.cs`
+- [X] T027 [P] [US1] Implement bounded per-session operational history with sequence filtering and token/secret redaction in `src/ChargingSimulator.Application/History/SessionHistory.cs`
 - [ ] T028 [P] [US1] Implement core outgoing OCPP payload factories and response mappers in `src/ChargingSimulator.Ocpp/Actions/CoreChargingActions.cs`
 - [ ] T029 [US1] Implement boot fingerprinting, initial status reporting, accepted heartbeat scheduling, bounded readiness, and no-automatic-replay handling in `src/ChargingSimulator.Application/Runtime/ChargerConnectionSupervisor.cs`
 - [ ] T030 [US1] Implement exclusive acquire, opaque lease validation/renewal, readiness tracking, private snapshot/history access, and release initiation in `src/ChargingSimulator.Application/Sessions/SessionManager.cs`
@@ -92,7 +92,7 @@ description: "Implementation tasks for charger session management"
 
 ### Tests for User Story 2
 
-- [ ] T034 [P] [US2] Add concurrent two-connector transition, transaction, meter-value, and invalid-transition unit tests in `tests/ChargingSimulator.Domain.Tests/Transitions/IndependentConnectorFlowTests.cs`
+- [X] T034 [P] [US2] Add concurrent two-connector transition, transaction, meter-value, and invalid-transition unit tests in `tests/ChargingSimulator.Domain.Tests/Transitions/IndependentConnectorFlowTests.cs`
 - [ ] T035 [P] [US2] Add API and scripted-WebSocket integration tests for simultaneous left/right transactions and no cross-talk across 100 deterministic runs in `tests/ChargingSimulator.IntegrationTests/Sessions/DualConnectorIsolationTests.cs`
 
 ### Implementation for User Story 2

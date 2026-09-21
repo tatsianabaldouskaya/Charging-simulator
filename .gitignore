@@ -1,0 +1,10 @@
+bin/
+obj/
+*.user
+*.suo
+packages/
+.DS_Store
+*.tmp
+*.swp
+.vscode/
+.idea/

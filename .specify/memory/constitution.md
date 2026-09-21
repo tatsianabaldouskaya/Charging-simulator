@@ -1,7 +1,7 @@
 <!--
 Sync Impact Report
-- Version change: unversioned template -> 1.0.0
-- Modified principles: none; initial adoption
+- Version change: 1.0.0 -> 2.0.0
+- Modified principles: manual operation, focused boundaries, and source-file organization
 - Added sections: Core Principles, Protocol and Runtime Constraints, Development Workflow
 - Removed sections: none
 - Templates requiring updates:
@@ -31,14 +31,12 @@ concurrent calls, and expose observable completion or failure. A caller MUST be 
 start, inspect, drive, and stop a session deterministically. Rationale: automated tests
 must not depend on timing guesses or hidden device state.
 
-### III. Automation-First Background Operation
-The simulator MUST run unattended as a background process while automated tests execute.
-It MUST provide a programmatic control surface for lifecycle actions, meter values,
-inbound messages, outbound messages, and state inspection. Shutdown and cancellation
-MUST stop timers, outstanding operations, and WebSocket activity cleanly. Rationale:
-the primary consumer is test automation, not an interactive operator.
+### III. Manual Operation and Connection Ownership
+The simulator MUST provide an interactive workflow for an operator to connect, inspect,
+operate, and disconnect a charger. It MUST own the OCPP WebSocket; browsers MUST never
+connect to the central system directly. Shutdown and cancellation MUST close WebSocket activity cleanly.
 
-### IV. Testable Boundaries and Deterministic Time
+### IV. Focused Boundaries and Explicit State
 Production code MUST separate protocol models, message generation/parsing, state
 orchestration, WebSocket transport, configuration, and external ChargeLab integration
 behind focused interfaces. Tests MUST cover state transitions, OCPP serialization and
@@ -46,10 +44,11 @@ correlation, error paths, and end-to-end WebSocket exchanges. Clocks, delays, ID
 transport dependencies MUST be injectable or otherwise controllable in tests. Rationale:
 reliable simulations require repeatable tests without network or wall-clock flakiness.
 
-### V. Clear .NET Design and Operational Diagnostics
+### V. Clear .NET Design, Formatting, and Operational Diagnostics
 The codebase MUST target .NET 10 and follow idiomatic .NET conventions, nullable-aware
 APIs, dependency injection, cancellation tokens, and asynchronous I/O. Components MUST
-have a single clear responsibility; duplication and speculative abstractions are
+have a single clear responsibility. Every C# file MUST use a file-scoped namespace and
+declare no more than one class; duplication and speculative abstractions are
 prohibited. Configuration MUST use typed options, validate required connection settings
 at startup, and never commit secrets. Structured logs MUST identify simulator instance,
 OCPP message ID, action, transaction ID when present, state transition, and failures.
@@ -99,4 +98,4 @@ clarifications that preserve policy. Every plan and review MUST include a compli
 unjustified violations block implementation. The constitution is reviewed when a protocol
 version, external integration, runtime model, or public control surface changes.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Awaiting project-owner adoption | **Last Amended**: 2026-09-20
+**Version**: 2.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Awaiting project-owner adoption | **Last Amended**: 2026-09-21
